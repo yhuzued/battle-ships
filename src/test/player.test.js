@@ -16,7 +16,7 @@ test('Computer should be capable to attack player board', () => {
   const player1 = new Player('player1');
   const computer = new Player('computer');
 
-  computer.shotOponent(player1.board, 1);
+  computer.shotOponent(player1, 1);
 
   expect(player1.board.tiles).toEqual(expectedResult);
 });
@@ -25,9 +25,42 @@ test('Computer can only attack available tile', () => {
   const player1 = new Player('player1');
   const computer = new Player('computer');
 
-  expect(computer.shotIsLegal(player1.board, 1)).toEqual(true);
+  expect(computer.shotIsLegal(player1, 1)).toEqual(true);
 
-  computer.shotOponent(player1.board, 1);
+  computer.shotOponent(player1, 1);
 
-  expect(computer.shotIsLegal(player1.board, 1)).toEqual(false);
+  expect(computer.shotIsLegal(player1, 1)).toEqual(false);
+});
+
+test('computer capable to make their own move', () => {
+  const player1 = new Player('player1');
+  const computer = new Player('computer');
+
+  for (let index = 0; index < 100; index += 1) {
+    computer.makeAutomaticMove(player1);
+  }
+
+  expect(player1.board.tiles.length).toBe(0);
+});
+
+test('computer shot 5 tiles', () => {
+  const player1 = new Player('player1');
+  const computer = new Player('computer');
+
+  for (let index = 0; index < 5; index += 1) {
+    computer.makeAutomaticMove(player1);
+  }
+
+  expect(player1.board.tiles.length).toBe(95);
+});
+
+test('computer shot 28 tiles', () => {
+  const player1 = new Player('player1');
+  const computer = new Player('computer');
+
+  for (let index = 0; index < 28; index += 1) {
+    computer.makeAutomaticMove(player1);
+  }
+
+  expect(player1.board.tiles.length).toBe(72);
 });
