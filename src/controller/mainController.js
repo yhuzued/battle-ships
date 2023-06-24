@@ -4,6 +4,7 @@ import {
   changeBackground,
   removeBackground,
   colorRed,
+  tileWithShip,
 } from './domController';
 
 const player1 = new Gameboard();
@@ -28,7 +29,8 @@ function handleMouseEvent(e) {
   const targetCoordinate = Number(targetTile.split('-')[1]);
   coordinate = targetCoordinate;
 
-  if (player1.placementOutOfBound(length, coordinate, orientation)) {
+  if (player1.placementOutOfBound(length, coordinate, orientation)
+    || player1.placementOverlap(length, coordinate, orientation)) {
     if (e.type === 'mouseover') {
       colorRed(coordinate);
     } else if (e.type === 'mouseout') {
@@ -40,12 +42,12 @@ function handleMouseEvent(e) {
   if (e.type === 'mouseover') {
     changeBackground(player1.shipOccupy(length, coordinate, orientation));
   } else if (e.type === 'mouseout') {
-    removeBackground('bg-blue-400');
+    removeBackground('bg-blue-100');
   }
 }
 
 function handleKeyDownEvent(e) {
-  removeBackground('bg-blue-400');
+  removeBackground('bg-blue-100');
   changeOrientation(e);
 
   if (player1.placementOutOfBound(length, coordinate, orientation)) {
@@ -57,6 +59,13 @@ function handleKeyDownEvent(e) {
   changeBackground(player1.shipOccupy(length, coordinate, orientation));
 }
 
+function handleClickEvent() {
+  player1.addShip(length, coordinate, orientation);
+  tileWithShip(player1.ships);
+  removeBackground('bg-blue-100');
+}
+
+document.addEventListener('click', handleClickEvent);
 document.addEventListener('mouseover', handleMouseEvent);
 document.addEventListener('mouseout', handleMouseEvent);
 document.addEventListener('keydown', handleKeyDownEvent);
