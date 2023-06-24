@@ -27,7 +27,7 @@ function colorRed(coordinate) {
   }
 }
 
-function tileWithShip(playerShips) {
+function colorTileWithShip(playerShips) {
   const allCoordinate = playerShips.flatMap((ship) => ship.coordinate);
   allCoordinate.forEach((coordinate) => {
     const tile = document.querySelector(`#player-${coordinate}`);
@@ -37,9 +37,27 @@ function tileWithShip(playerShips) {
   });
 }
 
+function toggleRedHighlight(e, coordinate) {
+  if (e.type === 'mouseover') {
+    colorRed(coordinate);
+  } else if (e.type === 'mouseout') {
+    removeBackground('bg-red-100');
+  }
+}
+
+function toggleBackgroundHighlight(e, player1, length, coordinate, orientation) {
+  if (e.type === 'mouseover') {
+    changeBackground(player1.shipOccupy(length, coordinate, orientation));
+  } else if (e.type === 'mouseout') {
+    removeBackground('bg-blue-100');
+  }
+}
+
 export {
   changeBackground,
   removeBackground,
   colorRed,
-  tileWithShip,
+  colorTileWithShip,
+  toggleRedHighlight,
+  toggleBackgroundHighlight,
 };
