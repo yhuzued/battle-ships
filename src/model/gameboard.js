@@ -7,28 +7,13 @@ export default function Gameboard() {
 
 // private
 
-function shipOccupy(length, coordinate, orientation) {
-  if (orientation === 'horizontal') {
-    return Array.from({ length }, (_, i) => coordinate + i);
-  }
-
-  const occupyTile = [coordinate];
-
-  for (let index = 1; index < length; index += 1) {
-    const tile = occupyTile[index - 1] + 10;
-    occupyTile.push(tile);
-  }
-
-  return occupyTile;
-}
-
 function checkHorizontal(length, coordinate) {
   if ((coordinate % 10) === 0) {
     return true;
   }
 
   const boundaries = (coordinate + 10) - (coordinate % 10);
-  if ((coordinate + length) > boundaries) {
+  if ((coordinate + length - 1) > boundaries) {
     return true;
   }
 
@@ -60,6 +45,21 @@ function attackShip(ships, coordinate) {
 
 // prototype
 
+Gameboard.prototype.shipOccupy = function shipOccupy(length, coordinate, orientation) {
+  if (orientation === 'horizontal') {
+    return Array.from({ length }, (_, i) => coordinate + i);
+  }
+
+  const occupyTile = [coordinate];
+
+  for (let index = 1; index < length; index += 1) {
+    const tile = occupyTile[index - 1] + 10;
+    occupyTile.push(tile);
+  }
+
+  return occupyTile;
+};
+
 Gameboard.prototype.placementOutOfBound = (length, coordinate, orientation) => {
   if (orientation === 'horizontal') {
     return checkHorizontal(length, coordinate);
@@ -83,7 +83,7 @@ Gameboard.prototype.addShip = function addShip(length, coordinate, orientation) 
     return;
   }
 
-  const arrayCoordinates = shipOccupy(length, coordinate, orientation);
+  const arrayCoordinates = this.shipOccupy(length, coordinate, orientation);
 
   const shipWrapper = {
     ship: new Ship(length),
