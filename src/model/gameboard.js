@@ -43,6 +43,10 @@ function attackShip(ships, coordinate) {
   });
 }
 
+function findDuplicates(array1, array2) {
+  return array1.filter((value) => array2.includes(value));
+}
+
 // prototype
 
 Gameboard.prototype.shipOccupy = function shipOccupy(length, coordinate, orientation) {
@@ -68,18 +72,27 @@ Gameboard.prototype.placementOutOfBound = (length, coordinate, orientation) => {
   return checkVertical(length, coordinate);
 };
 
-Gameboard.prototype.placementOverlap = function placementOverlap(coordinate) {
+Gameboard.prototype.placementOverlap = function placementOverlap(length, coordinate, orientation) {
   const result = [];
   this.ships.forEach((ship) => {
     result.push(ship.coordinate);
   });
 
-  return result.flat().includes(coordinate);
+  const duplicates = findDuplicates(
+    this.shipOccupy(length, coordinate, orientation),
+    result.flat(),
+  );
+
+  if (duplicates.length === 0) {
+    return false;
+  }
+
+  return true;
 };
 
 Gameboard.prototype.addShip = function addShip(length, coordinate, orientation) {
   if (this.placementOutOfBound(length, coordinate, orientation)
-    || this.placementOverlap(coordinate)) {
+    || this.placementOverlap(length, coordinate, orientation)) {
     return;
   }
 
